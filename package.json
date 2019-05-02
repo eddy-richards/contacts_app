@@ -1,0 +1,22 @@
+{
+  "name": "contacts_app",
+  "version": "1.0.0",
+  "description": "A small contact app",
+  "main": "contacts_app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eddy-richards/contacts_app.git"
+  },
+  "author": "edwin",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "moment": "^2.24.0",
+    "mongoose": "^5.5.5",
+    "morgan": "^1.9.1"
+  }
+}
