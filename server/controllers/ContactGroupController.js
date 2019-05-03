@@ -8,7 +8,6 @@ exports.save = async (req, res) => {
     responseCtrl.sendCreated(res, savedGroup)
   }catch(error){
     if(error.status = "bad_request"){
-      console.log(error.details)
       responseCtrl.sendBadRequest(res, error.details ? error.details : "Provide proper data")
     }else{
       responseCtrl.sendInternalServerError(res, "Error while saving contact")
@@ -27,7 +26,6 @@ exports.updateGroupName = async (req, res) => {
     }
   }catch(error){
     if(error.status = "bad_request"){
-      console.log(error.details)
       responseCtrl.sendBadRequest(res, error.details ? error.details : "Provide proper data")
     }else{
       responseCtrl.sendInternalServerError(res, "Error while updating contact group")
@@ -46,7 +44,6 @@ exports.addGroupMembers = async (req, res) => {
     }
   }catch(error){
     if(error.status = "bad_request"){
-      console.log(error.details)
       responseCtrl.sendBadRequest(res, error.details ? error.details : "Provide proper data")
     }else{
       responseCtrl.sendInternalServerError(res, "Error while adding group members")
@@ -65,7 +62,6 @@ exports.removeGroupMembers = async (req, res) => {
     }
   }catch(error){
     if(error.status = "bad_request"){
-      console.log(error.details)
       responseCtrl.sendBadRequest(res, error.details ? error.details : "Provide proper data")
     }else{
       responseCtrl.sendInternalServerError(res, "Error while removing group members")
@@ -81,7 +77,6 @@ exports.listContactGroup = async (req, res) => {
     responseCtrl.sendSuccess(res, listedContactGroup)
   }catch(error){
     if(error.status = "bad_request"){
-      console.log(error.details)
       responseCtrl.sendBadRequest(res, error.details ? error.details : "Provide proper data")
     }else{
       responseCtrl.sendInternalServerError(res, "Error while removing group members")
@@ -101,7 +96,6 @@ exports.showContactGroups = async (req, res) => {
     }
   }catch(error){
     if(error.status = "bad_request"){
-      console.log(error.details)
       responseCtrl.sendBadRequest(res, error.details ? error.details : "Provide proper data")
     }else{
       responseCtrl.sendInternalServerError(res, "Error while getting contact group")
@@ -121,7 +115,6 @@ exports.deleteContactGroups = async (req, res) => {
     }
   }catch(error){
     if(error.status = "bad_request"){
-      console.log(error.details)
       responseCtrl.sendBadRequest(res, error.details ? error.details : "Provide proper data")
     }else{
       responseCtrl.sendInternalServerError(res, "Error while deleting contact group")

@@ -136,7 +136,6 @@ exports.deleteContact = async (req, res) => {
   try{
     let requestBody = req.body;
     let deletedContact = await dbOperations.deleteContact(requestBody)
-    console.log(deletedContact)
     if(deletedContact){
       responseCtrl.sendSuccess(res, "Contact Deleted Successfully")
     }else{

@@ -18,9 +18,6 @@ exports.saveContact = async (contact) => {
       throw {status:"bad_request", details: "Give a valid Email"}
     }
 
-    console.log("!isValidEmailArray(personalEmails)", !isValidEmailArray(personalEmails))
-    console.log("!isValidEmailArray(workEmails)", !isValidEmailArray(workEmails))
-
     let newContact = new Contact();
     newContact.firstName = firstName;
     newContact.lastName = lastName;
@@ -247,7 +244,6 @@ exports.showContact = async (contactId) => {
 exports.deleteContact = async (deleteObj) => {
   try{
     let deletedContact = await Contact.deleteOne(deleteObj)
-    console.log(deletedContact)
     if(deletedContact && deletedContact.ok && deletedContact.deletedCount){
       return true
     }
