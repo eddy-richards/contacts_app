@@ -3,7 +3,7 @@ let router = express.Router()
 let ContactController = require('../server/controllers/ContactsController')
 
 router.post("/save", ContactController.save)
-router.post("/updateAll", ContactController.updateAll)
+// router.post("/updateAll", ContactController.updateAll)
 router.post("/updateContactName", ContactController.updateContactName)
 router.post("/addMobileNumber", ContactController.addMobileNumber)
 router.post("/addEmail", ContactController.addEmail)
