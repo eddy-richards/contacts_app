@@ -11,4 +11,4 @@ let Contact = new Schema({
   createdAt:{type: Date, default:Date.now}
 });
 
-module.exports = mongoose.model('contacts', Contact);
+module.exports = mongoose.model('Contacts', Contact);

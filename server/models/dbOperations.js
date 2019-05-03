@@ -34,7 +34,7 @@ exports.saveContact = async (contact) => {
 
 exports.updateWholeContact = async (contact) => {
   try{
-    if(checkFor_id){
+    if(checkFor_id(contact)){
       let updateObj = {
         firstName: contact.firstName,
         lastName: contact.lastName,
@@ -213,7 +213,6 @@ exports.listContacts = async (searchObj) => {
         findObj = {
           firstName:regEx
         }
-        console.group(findObj)
       }
     } else {
       findObj = {
@@ -228,7 +227,7 @@ exports.listContacts = async (searchObj) => {
         }]
       }
     }
-    return await Contact.find(findObj)
+    return await Contact.find(findObj).sort({createdAt:1})
   }catch(error){
     throw error
   }
@@ -275,4 +274,193 @@ isValidEmailArray = (emailArray = []) => {
 isEmail = (value) => {
   let index = value.search("@")
   return index > -1 ? true : false
+}
+
+// ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// -----------------------------ContactGroup DB Operations--------------------------------------
+// ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+
+const ContactGroup = require('../models/ContactGroups')
+
+exports.saveContactGroup = async (contactGroup) => {
+  try{
+    if(notNull(contactGroup.groupName)){
+      if(contactGroup.groupMembers.length > 0){
+        if(validGroupMembers(contactGroup.groupMembers)){
+          return await new ContactGroup(contactGroup).save()
+        }else{
+          throw {status:"bad_request", details: "ObjectId is invalid"}
+        }
+      }else{
+        throw {status:"bad_request", details: "Add atleast one Group Member"}
+      }
+    }else{
+      throw {status:"bad_request", details: "Give a Valid Group Name"}
+    }
+  }catch(error){
+    throw error
+  }
+}
+
+exports.updateGroupName = async (contactGroup) => {
+  try{
+    if(checkFor_id(contactGroup)){
+      let updateObj = {
+        groupName: contactGroup.groupName
+      }
+
+      let updatedContactGroup = await ContactGroup.updateOne({_id:mongoose.Types.ObjectId(contactGroup._id)},{"$set":updateObj})
+      if(updatedContactGroup && updatedContactGroup.ok && updatedContactGroup.nModified){
+        return true
+      }
+      return false
+    }else{
+      throw {status:"bad_request", details: "Need _id to update"}
+    }
+  }catch(error){
+    throw error
+  }
+}
+
+exports.addGroupMembers = async (contactGroup) => {
+  try{
+    if(checkFor_id(contactGroup)){
+      if(contactGroup.groupMembers.length > 0){
+        if(validGroupMembers(contactGroup.groupMembers)){
+          let updateObj = {
+            groupMembers: {
+              "$each": contactGroup.groupMembers
+            }
+          }
+    
+          let updatedContactGroup = await ContactGroup.updateOne({_id:mongoose.Types.ObjectId(contactGroup._id)},{"$addToSet":updateObj})
+          if(updatedContactGroup && updatedContactGroup.ok && updatedContactGroup.nModified){
+            return true
+          }
+          return false
+        }else{
+          throw {status:"bad_request", details: "ObjectId is invalid"}
+        }
+      }else{
+        throw {status:"bad_request", details: "Add atleast one Group Member"}
+      }
+    }else{
+      throw {status:"bad_request", details: "Need _id to update"}
+    }
+  }catch(error){
+    throw error
+  }
+}
+
+exports.removeGroupMembers = async (contactGroup) => {
+  try{
+    if(checkFor_id(contactGroup)){
+      if(contactGroup.groupMembers.length > 0){
+        if(validGroupMembers(contactGroup.groupMembers)){
+          let updateObj = {
+            groupMembers:{
+              "$in": contactGroup.groupMembers
+            }
+          }
+    
+          let updatedContactGroup = await ContactGroup.updateOne({_id:mongoose.Types.ObjectId(contactGroup._id)},{"$pull":updateObj})
+          if(updatedContactGroup && updatedContactGroup.ok && updatedContactGroup.nModified){
+            return true
+          }
+          return false
+        }else{
+          throw {status:"bad_request", details: "ObjectId is invalid"}
+        }
+      }else{
+        throw {status:"bad_request", details: "Add atleast one Group Member"}
+      }
+    }else{
+      throw {status:"bad_request", details: "Need _id to update"}
+    }
+  }catch(error){
+    throw error
+  }
+}
+
+exports.listContactGroup = async (searchObj) => {
+  try{
+    let findObj = {};
+    let regEx = new RegExp("^"+searchObj.groupName, "i")
+    findObj = {
+      groupName:regEx
+    }
+    // return await ContactGroup.find(findObj)..sort({createdAt:1})  // to get only contactGroup
+    // return await ContactGroup.find(findObj).populate('groupMembers').sort({createdAt:1})   // to get with groupMember detatils by populate
+    return await ContactGroup.aggregate([
+      {
+        "$match":findObj
+      },
+      {
+        "$unwind": "$groupMembers"
+      },
+      {
+        "$lookup": {
+          "from": "contacts",
+          "localField": "groupMembers",
+          "foreignField": "_id",
+          "as": "groupMembers"
+        }
+      },
+      {
+        "$unwind": "$groupMembers"
+      },
+      {
+        "$group": {
+          "_id": "$_id",
+          "groupName":{
+            "$first": "$groupName"
+          },
+          "createdAt":{
+            "$first": "$createdAt"
+          },
+          "groupMembers": {
+            "$push": "$groupMembers"
+          }
+        }
+      },
+      {
+        "$sort":{"createdAt":1}
+      }
+    ])    // to get with groupMember detatils by lookup (aggregate)
+  }catch(error){
+    console.log(error)
+    throw error
+  }
+}
+
+exports.showContactGroups = async (contactGroupId) => {
+  try{
+    return await ContactGroup.findById(contactGroupId).populate('groupMembers')
+  }catch(error){
+    throw error
+  }
+}
+
+exports.deleteContactGroups = async (deleteObj) => {
+  try{
+    let deletedContactGroup = await ContactGroup.deleteOne(deleteObj)
+    if(deletedContactGroup && deletedContactGroup.ok && deletedContactGroup.deletedCount){
+      return true
+    }
+    return false
+  }catch(error){
+    throw error
+  }
+}
+
+notNull = (value) => {
+  return value != "" && value != null && value != undefined
+}
+
+validGroupMembers = (groupArray) => {
+  return groupArray.every((member) => {
+    return mongoose.Types.ObjectId.isValid(member)
+  })
 }

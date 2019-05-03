@@ -1,4 +1,3 @@
-let Contacts = require('../models/Contacts')
 let responseCtrl = require('../../utils/reponseCtrl')
 let dbOperations = require('../models/dbOperations')
 
@@ -6,7 +5,7 @@ exports.save = async (req, res) => {
   try{
     let requestBody = req.body;
     let savedContact = await dbOperations.saveContact(requestBody.contact)
-    responseCtrl.sendSuccess(res, savedContact)
+    responseCtrl.sendCreated(res, savedContact)
   }catch(error){
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
@@ -25,12 +24,12 @@ exports.updateAll = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while updating contact")
     }
   }
 }
 
-exports.updateName = async (req, res) => {
+exports.updateContactName = async (req, res) => {
   try{
     let requestBody = req.body;
     let updatedContact = await dbOperations.updateContactName(requestBody.contact)
@@ -39,7 +38,7 @@ exports.updateName = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while updating contact")
     }
   }
 }
@@ -53,7 +52,7 @@ exports.addMobileNumber = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while adding mobileNumber to contact")
     }
   }
 }
@@ -67,7 +66,7 @@ exports.addEmail = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while adding Email to contact")
     }
   }
 }
@@ -81,7 +80,7 @@ exports.removeMobileNumber = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while removing mobileNumber to contact")
     }
   }
 }
@@ -95,7 +94,7 @@ exports.removeEmail = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while removing email to contact")
     }
   }
 }
@@ -109,7 +108,7 @@ exports.listContacts = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while listing contact")
     }
   }
 }
@@ -118,12 +117,17 @@ exports.showContact = async (req, res) => {
   try{
     let requestBody = req.body;
     let contactDetails = await dbOperations.showContact(requestBody._id)
-    responseCtrl.sendSuccess(res, contactDetails)
+
+    if(contactDetails == null){
+      responseCtrl.sendNotFound(res, "Contact not found")
+    }else{
+      responseCtrl.sendSuccess(res, contactDetails)
+    }
   }catch(error){
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while showing contact")
     }
   }
 }
@@ -142,7 +146,7 @@ exports.deleteContact = async (req, res) => {
     if(error.status = "bad_request"){
       responseCtrl.sendBadRequest(res, error.details)
     }else{
-      responseCtrl.sendInternalServerError(res, "Error while saving contact")
+      responseCtrl.sendInternalServerError(res, "Error while deleting contact")
     }
   }
 }

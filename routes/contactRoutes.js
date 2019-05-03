@@ -4,7 +4,7 @@ let ContactController = require('../server/controllers/ContactsController')
 
 router.post("/save", ContactController.save)
 router.post("/updateAll", ContactController.updateAll)
-router.post("/updateName", ContactController.updateName)
+router.post("/updateContactName", ContactController.updateContactName)
 router.post("/addMobileNumber", ContactController.addMobileNumber)
 router.post("/addEmail", ContactController.addEmail)
 router.post("/removeMobileNumber", ContactController.removeMobileNumber)

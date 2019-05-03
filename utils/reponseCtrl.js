@@ -8,6 +8,14 @@ exports.sendSuccess=function (res,data){
     });
     return;
 }
+exports.sendCreated=function (res,data){
+    res.status(HttpStatus.CREATED).json({
+        status:'success',
+        code: HttpStatus.CREATED,
+        data:data
+    });
+    return;
+}
 exports.sendInternalServerError=function (res,data){
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         status:'failure',
@@ -29,14 +37,6 @@ exports.sendBadRequest=function (res,data){
         status:'failure',
         code: HttpStatus.BAD_REQUEST,
         error:data
-    });
-    return;
-}
-exports.sendUnAuthorized=function (res,data="UNAUTHORIZED USER"){
-    res.status(HttpStatus.UNAUTHORIZED).json({
-        status:'failure',
-        code: HttpStatus.UNAUTHORIZED,
-        error: data
     });
     return;
 }
