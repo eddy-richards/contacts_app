@@ -12,11 +12,14 @@ exports.saveContact = async (contact) => {
 
     if((personalNumbers.length == 0) && (workNumbers.length == 0)){
       throw {status:"bad_request", details: "Personal Number or Work Number Needed"}
-    }else if(!isValidNumberArray(personalNumbers) && !isValidNumberArray(workNumbers)){
+    }else if(!isValidNumberArray(personalNumbers) || !isValidNumberArray(workNumbers)){
       throw {status:"bad_request", details: "Personal Number and Work Number should be a valid number "}
-    }else if(!isValidEmailArray(personalEmails) && !isValidEmailArray(workEmails)){
+    }else if(!isValidEmailArray(personalEmails) || !isValidEmailArray(workEmails)){
       throw {status:"bad_request", details: "Give a valid Email"}
     }
+
+    console.log("!isValidEmailArray(personalEmails)", !isValidEmailArray(personalEmails))
+    console.log("!isValidEmailArray(workEmails)", !isValidEmailArray(workEmails))
 
     let newContact = new Contact();
     newContact.firstName = firstName;
@@ -83,7 +86,7 @@ exports.updateContactName = async (contact) => {
 exports.addMobileNumber = async (contact) => {
   try{
     if(checkFor_id){
-      if(!isValidNumberArray(contact.personalNumbers) && !isValidNumberArray(contact.workNumbers)){
+      if(!isValidNumberArray(contact.personalNumbers) || !isValidNumberArray(contact.workNumbers)){
         throw {status:"bad_request", details: "Personal Number and Work Number should be a valid number "}
       }
       let updateObj = {
@@ -111,7 +114,7 @@ exports.addMobileNumber = async (contact) => {
 exports.addEmail = async (contact) => {
   try{
     if(checkFor_id){
-      if(!isValidEmailArray(contact.personalEmails) && !isValidEmailArray(contact.workEmails)){
+      if(!isValidEmailArray(contact.personalEmails) || !isValidEmailArray(contact.workEmails)){
         throw {status:"bad_request", details: "Give a valid Email"}
       }
       let updateObj = {
@@ -139,7 +142,7 @@ exports.addEmail = async (contact) => {
 exports.removeMobileNumber = async (contact) => {
   try{
     if(checkFor_id){
-      if(!isValidNumberArray(contact.personalNumbers) && !isValidNumberArray(contact.workNumbers)){
+      if(!isValidNumberArray(contact.personalNumbers) || !isValidNumberArray(contact.workNumbers)){
         throw {status:"bad_request", details: "Personal Number and Work Number should be a valid number "}
       }
       let updateObj = {
@@ -167,7 +170,7 @@ exports.removeMobileNumber = async (contact) => {
 exports.removeEmail = async (contact) => {
   try{
     if(checkFor_id){
-      if(!isValidEmailArray(contact.personalEmails) && !isValidEmailArray(contact.workEmails)){
+      if(!isValidEmailArray(contact.personalEmails) || !isValidEmailArray(contact.workEmails)){
         throw {status:"bad_request", details: "Give a valid Email"}
       }
       let updateObj = {
@@ -265,9 +268,9 @@ isValidNumberArray = (numArray = []) => {
 }
 
 isValidEmailArray = (emailArray = []) => {
-  let re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
   return emailArray.every((email) => {
-    return re.test(email)
+    return re.test(email.toLowerCase())
   })
 }
 
