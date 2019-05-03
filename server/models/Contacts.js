@@ -2,12 +2,13 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let Contact = new Schema({
-  firstName: {type: String},
+  firstName: {type: String, required: true},
   lastName: {type: String},
-  workNumbers: [Number],
-  personalNumbers: [Number],
+  workNumbers: [String],
+  personalNumbers: [String],
   workEmails: [String],
   personalEmails: [String],
+  createdAt:{type: Date, default:Date.now}
 });
 
 module.exports = mongoose.model('contacts', Contact);
